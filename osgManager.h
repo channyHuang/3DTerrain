@@ -22,7 +22,8 @@ public:
 
     void setViewer(osg::ref_ptr<osgViewer::Viewer> pViewer);
     void switchScene();
-    void show();
+    void reset();
+    void testShow();
 
     void sltGenerateMeshSuc(TerrainStruct::Arrays, Vector3i);
 

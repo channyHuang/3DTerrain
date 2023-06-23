@@ -92,14 +92,32 @@ protected:
         ImGui::InputInt("center z", &vCenter[2]);
 
         ImGui::Separator();
+        ImGui::Checkbox("use biomes", &m_stBiomeParams.use_biomes);
+        if (m_stBiomeParams.use_biomes) {
+            for (int i = 0; i < m_vBiomesStr.size(); ++i) {
+                ImGui::Checkbox(m_vBiomesStr[i].c_str(), &m_vBiomesCheck[i]);
+
+                if (m_vBiomesCheck[i]) {
+                    m_stBiomeParams.biomes_be_checked &= (1 << i);
+                } else {
+                    m_stBiomeParams.biomes_be_checked ^= (1 << i);
+                }
+            }
+        }
+
+        ImGui::Separator();
         if (ImGui::Button("Generate")) {
             VoxelBrush *brush = new VoxelBrush(TerrainManager::getInstance(), VoxelMap::getInstance());
             TerrainGenerator_Roblox::getInstance()->setRange(Vector3(vCenter[0], vCenter[1], vCenter[2]), Vector3(vSize[0], vSize[1], vSize[2]));
             TerrainGenerator_Roblox::getInstance()->generateTerrainByBiomes(brush, m_stBiomeParams);
         }
 
+        if (ImGui::Button("Reset")) {
+            OsgManager::getInstance()->reset();
+        }
+
         if (ImGui::Button("Test")) {
-            OsgManager::getInstance()->show();
+            OsgManager::getInstance()->testShow();
         }
         ImGui::End();
 
@@ -117,6 +135,17 @@ public:
     int vCenter[3] = {0};
     TerrainGenerator_Roblox::BiomesParam m_stBiomeParams;
     std::chrono::steady_clock::time_point m_lastTime;
+    std::vector<std::string> m_vBiomesStr = {    "Water",
+                                                 "Marsh",
+                                                 "Plains",
+                                                 "Hills",
+                                                 "Dunes",
+                                                 "Canyons",
+                                                 "Mountains",
+                                                 "Lavaflow",
+                                                 "Arctic"
+                                            };
+    bool m_vBiomesCheck[9] = {false, false, false, false, false, false, false, false, false};
 };
 
 int main() {

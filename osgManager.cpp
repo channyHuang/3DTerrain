@@ -46,6 +46,10 @@ OsgManager::~OsgManager() {
     m_pSceneRoot->removeChildren(0, m_pSceneRoot->getNumChildren());
 }
 
+void OsgManager::reset() {
+    m_pSceneRoot->removeChildren(0, m_pSceneRoot->getNumChildren());
+}
+
 void OsgManager::setViewer(osg::ref_ptr<osgViewer::Viewer> pViewer) {
     m_pViewer = pViewer;
     m_pSceneRoot = new osg::Switch;
@@ -85,64 +89,64 @@ void OsgManager::sltGenerateMeshSuc(TerrainStruct::Arrays surface, Vector3i pos)
     m_pSceneRoot->addChild(geom);
 }
 
-void OsgManager::show() {
+void OsgManager::testShow() {
     osg::Geometry* polyGeom = new osg::Geometry();
 
-        // note, anticlockwise ordering.
-        osg::Vec3 myCoords[] =
-        {
-            osg::Vec3(-1.22908f,0.0f,1.0f),
-            osg::Vec3(-1.22908f,0.0f,-1.0f),
-            osg::Vec3(1.22908f,0.0f,-1.0f),
-            osg::Vec3(1.22908f,0.0f,1.0f)
-        };
+    // note, anticlockwise ordering.
+    osg::Vec3 myCoords[] =
+    {
+        osg::Vec3(-1.22908f,0.0f,1.0f),
+        osg::Vec3(-1.22908f,0.0f,-1.0f),
+        osg::Vec3(1.22908f,0.0f,-1.0f),
+        osg::Vec3(1.22908f,0.0f,1.0f)
+    };
 
-        int numCoords = sizeof(myCoords)/sizeof(osg::Vec3);
+    int numCoords = sizeof(myCoords)/sizeof(osg::Vec3);
 
-        // pass the created vertex array to the points geometry object.
-        polyGeom->setVertexArray(new osg::Vec3Array(numCoords,myCoords));
+    // pass the created vertex array to the points geometry object.
+    polyGeom->setVertexArray(new osg::Vec3Array(numCoords,myCoords));
 
-        osg::Vec4Array* colors = new osg::Vec4Array;
-        colors->push_back(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-        polyGeom->setColorArray(colors, osg::Array::BIND_OVERALL);
+    osg::Vec4Array* colors = new osg::Vec4Array;
+    colors->push_back(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    polyGeom->setColorArray(colors, osg::Array::BIND_OVERALL);
 
 
-        // Set the normal in the same way as the color.
-        osg::Vec3Array* normals = new osg::Vec3Array;
-        normals->push_back(osg::Vec3(0.0f,-1.0f,0.0f));
-        polyGeom->setNormalArray(normals, osg::Array::BIND_OVERALL);
+    // Set the normal in the same way as the color.
+    osg::Vec3Array* normals = new osg::Vec3Array;
+    normals->push_back(osg::Vec3(0.0f,-1.0f,0.0f));
+    polyGeom->setNormalArray(normals, osg::Array::BIND_OVERALL);
 
-        osg::Vec2 myTexCoords[] =
-        {
-            osg::Vec2(0,1),
-            osg::Vec2(0,0),
-            osg::Vec2(1,0),
-            osg::Vec2(1,1)
-        };
+    osg::Vec2 myTexCoords[] =
+    {
+        osg::Vec2(0,1),
+        osg::Vec2(0,0),
+        osg::Vec2(1,0),
+        osg::Vec2(1,1)
+    };
 
-        int numTexCoords = sizeof(myTexCoords)/sizeof(osg::Vec2);
+    int numTexCoords = sizeof(myTexCoords)/sizeof(osg::Vec2);
 
-        // pass the created tex coord array to the points geometry object,
-        // and use it to set texture unit 0.
-        polyGeom->setTexCoordArray(0,new osg::Vec2Array(numTexCoords,myTexCoords));
+    // pass the created tex coord array to the points geometry object,
+    // and use it to set texture unit 0.
+    polyGeom->setTexCoordArray(0,new osg::Vec2Array(numTexCoords,myTexCoords));
 
-        // we'll use indices and DrawElements to define the primitive this time.
-        unsigned short myIndices[] =
-        {
-            0,
-            1,
-            3,
-            2
-        };
+    // we'll use indices and DrawElements to define the primitive this time.
+    unsigned short myIndices[] =
+    {
+        0,
+        1,
+        3,
+        2
+    };
 
-        int numIndices = sizeof(myIndices)/sizeof(unsigned short);
+    int numIndices = sizeof(myIndices)/sizeof(unsigned short);
 
-        // There are three variants of the DrawElements osg::Primitive, UByteDrawElements which
-        // contains unsigned char indices, UShortDrawElements which contains unsigned short indices,
-        // and UIntDrawElements which contains ... unsigned int indices.
-        // The first parameter to DrawElements is
-        polyGeom->addPrimitiveSet(new osg::DrawElementsUShort(osg::PrimitiveSet::TRIANGLE_STRIP,numIndices,myIndices));
+    // There are three variants of the DrawElements osg::Primitive, UByteDrawElements which
+    // contains unsigned char indices, UShortDrawElements which contains unsigned short indices,
+    // and UIntDrawElements which contains ... unsigned int indices.
+    // The first parameter to DrawElements is
+    polyGeom->addPrimitiveSet(new osg::DrawElementsUShort(osg::PrimitiveSet::TRIANGLE_STRIP,numIndices,myIndices));
 
-        //m_pSceneRoot->addChild(polyGeom);
-        m_pViewer->setSceneData(polyGeom);
+    //m_pSceneRoot->addChild(polyGeom);
+    m_pViewer->setSceneData(polyGeom);
 }
