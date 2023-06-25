@@ -89,6 +89,49 @@ void OsgManager::sltGenerateMeshSuc(TerrainStruct::Arrays surface, Vector3i pos)
     m_pSceneRoot->addChild(geom);
 }
 
+void setShader(osg::ref_ptr<osg::Geometry> geom) {
+    osg::StateSet* stateset = geom->getOrCreateStateSet();
+    osg::Program *program = new osg::Program;
+    program->addShader(osgDB::readRefShaderFile(osg::Shader::VERTEX, "./../resource/vertex.glsl"));
+    program->addShader(osgDB::readRefShaderFile(osg::Shader::FRAGMENT, "./../resource/fragment.glsl"));
+    program->addBindAttribLocation("in_vertex", 1);
+    program->addBindAttribLocation("in_normal", 2);
+    stateset->setAttribute(program);
+
+    osg::Vec3Array *vertex = (osg::Vec3Array *)(geom->getVertexArray());
+    geom->setVertexAttribArray(1, vertex);
+    osg::Vec3Array *normal = (osg::Vec3Array *)(geom->getNormalArray());
+    geom->setVertexAttribArray(2, normal);
+
+    osg::Vec3f lightDir( 0., 0.5, 1. );
+    lightDir.normalize();
+    stateset->addUniform( new osg::Uniform( "lightDir", lightDir ) );
+}
+
+void OsgManager::sltShowMeshWithShader(TerrainStruct::Arrays surface, Vector3i pos) {
+    osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
+    osg::Vec3Array *vvertex = new osg::Vec3Array;
+    osg::Vec3Array *vnormal = new osg::Vec3Array;
+    for (int i = 0; i < surface.positions.size(); ++i) {
+        vvertex->push_back(osg::Vec3(surface.positions[i].x, surface.positions[i].y, surface.positions[i].z));
+        vnormal->push_back(osg::Vec3(surface.normals[i].x, surface.normals[i].y, surface.normals[i].z));
+    }
+    geom->setVertexArray(vvertex);
+    geom->setNormalArray(vnormal);
+    std::vector<unsigned int> indices;
+    for (int i = 0; i < surface.indices.size(); ++i) {
+        indices.push_back(surface.indices[i]);
+    }
+    geom->addPrimitiveSet(new osg::DrawElementsUInt(osg::PrimitiveSet::TRIANGLES, indices.size(), indices.data()));
+
+    osg::ref_ptr<osg::StateSet> ss = geom->getOrCreateStateSet();
+    ss->setTextureAttributeAndModes(0, createTexture("resource/barkD_texture.bmp"));
+
+    setShader(geom);
+
+    m_pSceneRoot->addChild(geom);
+}
+
 void OsgManager::testShow() {
     osg::Geometry* polyGeom = new osg::Geometry();
 

@@ -26,6 +26,7 @@ public:
     void testShow();
 
     void sltGenerateMeshSuc(TerrainStruct::Arrays, Vector3i);
+    void sltShowMeshWithShader(TerrainStruct::Arrays, Vector3i);
 
 private:
     OsgManager();

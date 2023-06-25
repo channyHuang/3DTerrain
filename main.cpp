@@ -154,6 +154,9 @@ int main() {
     viewer->setRealizeOperation(new ImGuiInitOperation);
     viewer->addEventHandler(new ImGuiDemo);
 
+    viewer->getCamera()->getGraphicsContext()->getState()->setUseModelViewAndProjectionUniforms(true);
+    viewer->getCamera()->getGraphicsContext()->getState()->resetVertexAttributeAlias(true);
+
     OsgManager::getInstance()->setViewer(viewer);
     viewer->getCamera()->getGraphicsContext()->getState()->setCheckForGLErrors(osg::State::NEVER_CHECK_GL_ERRORS);
 

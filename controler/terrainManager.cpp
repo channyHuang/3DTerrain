@@ -124,7 +124,8 @@ void TerrainManager::_process() {
 void TerrainManager::start_updater() {
     _block_updater = new MeshGeneratorManager();
 
-    sigGenerateMeshSuc.connect(OsgManager::getInstance(), &OsgManager::sltGenerateMeshSuc);
+    //sigGenerateMeshSuc.connect(OsgManager::getInstance(), &OsgManager::sltGenerateMeshSuc);
+    sigGenerateMeshSuc.connect(OsgManager::getInstance(), &OsgManager::sltShowMeshWithShader);
 }
 
 void TerrainManager::stop_updater() {

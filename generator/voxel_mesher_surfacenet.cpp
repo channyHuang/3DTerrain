@@ -2,7 +2,7 @@
 
 //#define DEBUG_SINGLE_BUILD_MESH
 //#define DEBUG_SINGLE_BUILD_TIME
-#define DEBUG_SINGLE_BUILD_MESHS
+//#define DEBUG_SINGLE_BUILD_MESHS
 
     namespace {
         static const float TRANSITION_CELL_SCALE = 0.25;
